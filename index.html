@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Simple Cookie Usage</title>
+	<style type="text/css">
+		div.ball{
+		    width: 60px;
+		    height: 60px;		    
+		    display: block;
+	      border-radius: 50%;
+	      margin: 0;
+		}
+		div#clickMe {
+			-webkit-appearance: button;
+			border: none;
+			display: inline-block;
+			padding: 8px 16px;
+			vertical-align: middle;
+			overflow: hidden;
+			text-decoration: none;
+			color: inherit;
+			background-color: inherit;
+			text-align: center;
+			cursor: pointer;
+			white-space: nowrap;
+		}
+		#statusText.greenText {
+			color: #008000;
+		}
+	</style>
+	<script type="text/javascript">
+		function getCookie(name) {
+		    var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+		    return v ? v[2] : null;
+		};
+
+		function setCookie(name, value) {
+		    var d = new Date;
+		    // the cookie will expire in a day
+		    d.setTime(d.getTime() + 24*60*60*1000*1);
+		    document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
+		};
+
+		function deleteCookie(name) { 
+			setCookie(name, '', -1); 
+		};
+
+		function getReport (availableColors) {
+			const luckyColor = availableColors[getCookie('luckyColor')].name;
+			return availableColors.map(function (color) {
+				let luckyColorCount = 0;
+				if(luckyColor === color.name) {
+					luckyColorCount = getCookie("luckyColorCount");
+				}
+				return "<span style='color:" + color.colorCode +"'>" +color.name + "</span> - " + luckyColorCount;
+			}).join("<br/>");
+
+
+		}
+
+		window.onload = function(){
+			// Simply adding more colors will work as expected. Sample commented
+			const availableColors = [
+																{ name: 'Blue', colorCode: '#0000FF' }, 
+																{ name: 'Red', 	colorCode: '#FF0000'},
+																// { name: 'Green', 	colorCode: '#008000'} 
+															];
+
+			// bind click event on "Clear my Lucky Color" button
+			document.getElementById("clickMe").addEventListener('click', function() {
+				deleteCookie('luckyColor');
+				deleteCookie('luckyColorCount');
+				document.getElementById('statusText').innerText ="Cleared, you may refresh your screen Now"
+				document.getElementById('statusText').className = 'greenText';
+			})
+			
+			// dynamiclly updated elements
+			const whichColorEle = document.getElementById("whichColor");
+			const ballEle = document.getElementById("ball");
+			const totalColorsEle = document.getElementById("totalColors");
+			const colorsListEle = document.getElementById("colorsList");
+			const reportEle = document.getElementById("report");
+
+			// get the color and count from cookie if exist
+			let luckyColor = getCookie('luckyColor');
+			let luckyColorCount = +getCookie('luckyColorCount');
+
+			// if null which means first time or either cookie cleared manually or by given button "Clear my Lucky Color"
+			// set luckyColor and luckyColorCount immediately
+			if(!luckyColor) {
+				luckyColor = Math.floor(Math.random() * Object.keys(availableColors).length); // get either 0 .... availableColors-1
+				setCookie('luckyColor', luckyColor);
+			}
+			setCookie("luckyColorCount", luckyColorCount+1);
+
+			// update Color details on DOM
+			whichColorEle.innerText = availableColors[luckyColor].name;
+			ballEle.style.backgroundColor = availableColors[luckyColor].colorCode;
+
+			// update available Colors and count 
+			totalColorsEle.innerText = Object.keys(availableColors).length;
+			colorsListEle.innerText = availableColors.map(function(color) { return color.name; }).join(", ");
+			reportEle.innerHTML = getReport(availableColors);
+		};
+
+	</script>
+</head>
+<body>
+<h1>Your are lucky got <span id="whichColor"></span> color Ball :)</h1>
+<div id="ball" class="ball"></div>
+
+<p>We have <span id="totalColors"></span> Color, which are <span id="colorsList"></span>.</p>
+<p id="statusText">You may try your next lucky color by ...</p>
+<div id="clickMe">Clear my Lucky Color</div>
+<br/>
+<p>Color Appeared for you so far.</p>
+<p id="report"></p>
+
+</body>
+</html>
