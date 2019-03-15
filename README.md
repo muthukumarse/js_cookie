@@ -1,0 +1,5 @@
+- Used Javascript
+- Used Javascript Clousure to hide functions and variable in runtime
+- Used ES6 only at the max
+- Simply modularized and imported
+- CSS kept into styles.css and imported

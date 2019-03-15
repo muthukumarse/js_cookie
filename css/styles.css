@@ -1,0 +1,25 @@
+#ball {
+  width: 60px;
+  height: 60px;
+  display: block;
+  border-radius: 50%;
+  margin: 0;
+}
+#clickMe {
+  -webkit-appearance: button;
+  border: 1px solid #000000;
+  display: inline-block;
+  padding: 8px 16px;
+  vertical-align: middle;
+  overflow: hidden;
+  text-decoration: none;
+  background-color: #d3d3d3;
+  text-align: center;
+  white-space: nowrap;
+}
+#statusText {
+  color: #000000;
+}
+#statusText.greenText {
+  color: #008000;
+}
